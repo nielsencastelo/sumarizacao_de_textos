@@ -1,2 +1,2 @@
 # sumarizacao_de_textos
- Varias aplicacoes de sumarizacoes de textos ou documentos
+ Varias aplicacões de sumarizacão de textos ou documentos

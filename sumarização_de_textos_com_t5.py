@@ -1,23 +1,24 @@
 # -*- coding: utf-8 -*-
 """
-# Sumarização de textos com GPT-2
+# Sumarização de textos com T5
 
 ## Textos de exemplos
 """
 
-from transformers import GPT2Tokenizer, GPT2LMHeadModel
+from transformers import T5Tokenizer, T5ForConditionalGeneration
 
 def summarize_text(text):
-    # Inicializar o tokenizador e o modelo GPT-2 pré-treinado
-    tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-    model = GPT2LMHeadModel.from_pretrained('gpt2')
+    # Inicializar o tokenizador e o modelo T5 pré-treinado
+    tokenizer = T5Tokenizer.from_pretrained('t5-base')
+    model = T5ForConditionalGeneration.from_pretrained('t5-base')
 
-    # Tokenizar o texto
-    input_ids = tokenizer.encode(text, return_tensors='pt')
+    # Preprocessar o texto
+    input_text = "summarize: " + text
+    inputs = tokenizer.encode(input_text, return_tensors='pt', max_length=512, truncation=True)
 
     # Gerar a sumarização
-    output = model.generate(input_ids, max_length=100, num_return_sequences=1, early_stopping=True)
-    summary = tokenizer.decode(output[0], skip_special_tokens=True)
+    summary_ids = model.generate(inputs, max_length=150, num_beams=4, early_stopping=True)
+    summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
 
     return summary
 
@@ -35,4 +36,5 @@ Inteligência artificial é raciocinar nas situações do cotidiano.
 
 resumo = summarize_text(texto)
 print(resumo)
+
 

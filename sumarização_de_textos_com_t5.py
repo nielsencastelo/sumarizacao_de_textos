@@ -7,6 +7,25 @@
 
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 
+def summarize_file(file_path):
+    # Inicializar o tokenizador e o modelo T5 pré-treinado
+    tokenizer = T5Tokenizer.from_pretrained('t5-base')
+    model = T5ForConditionalGeneration.from_pretrained('t5-base')
+
+    # Ler o conteúdo do arquivo
+    with open(file_path, 'r', encoding='utf-8') as file:
+        text = file.read()
+
+    # Preprocessar o texto
+    input_text = "summarize: " + text
+    inputs = tokenizer.encode(input_text, return_tensors='pt', max_length=512, truncation=True)
+
+    # Gerar a sumarização
+    summary_ids = model.generate(inputs, max_length=150, num_beams=4, early_stopping=True)
+    summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
+
+    return summary
+
 def summarize_text(text):
     # Inicializar o tokenizador e o modelo T5 pré-treinado
     tokenizer = T5Tokenizer.from_pretrained('t5-base')
